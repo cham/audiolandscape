@@ -7,12 +7,23 @@ require([
 ){
     'use strict';
 
+    function makeStats(){
+        var stats = new Stats();
+
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = 0;
+        document.body.appendChild(stats.domElement);
+
+        return stats;
+    }
+
     function addRow(rowNum){
         for(var i = 0; i < resolution * 2; i++){
-            geometry.vertices.push(new THREE.Vector3(i*4, 0, -rowNum));
+            geometry.vertices.push(new THREE.Vector3(i*3, 0, -rowNum));
         }
     }
 
+    var stats = makeStats();
     var totalRows = 500;
     var sandbox = new Sandbox();
     var resolution = 64;
@@ -48,7 +59,10 @@ require([
 
     function tick(){
         requestAnimationFrame(tick);
+
+        stats.begin();
         sandbox.render();
+        stats.end();
     }
 
     system.position.x = -250;
