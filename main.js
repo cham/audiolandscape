@@ -65,8 +65,8 @@ require([
         stats.end();
     }
 
-    system.position.x = -250;
-    system.position.z = 100;
+    system.position.x = -190;
+    system.position.z = 150;
 
     sandbox.add(system);
 
