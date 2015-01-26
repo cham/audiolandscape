@@ -13,27 +13,13 @@ require([
         }
     }
 
-    // function makeFaces(geometry){
-    //     var rowWidth = resolution * 2;
-    //     var totalVertices = geometry.vertices.length;
-    //     var totalRows = totalVertices / rowWidth;
-    //     for(var rowNum = 0; rowNum < totalRows - 2; rowNum++){
-    //         for(var vertexNum = 0; vertexNum < rowWidth; vertexNum++){
-    //             var rowOffset = rowNum * rowWidth;
-    //             var leftCorner = rowOffset + vertexNum;
-    //             geometry.faces.push(new THREE.Face3(leftCorner, leftCorner + 1, leftCorner + rowWidth));
-    //             geometry.faces.push(new THREE.Face3(leftCorner + rowWidth, leftCorner + rowWidth + 1, leftCorner + 1));
-    //         }
-    //     }
-    // }
-
-    var totalRows = 400;
+    var totalRows = 500;
     var sandbox = new Sandbox();
-    var resolution = 32;
+    var resolution = 64;
     var geometry = new THREE.Geometry();
     var material = new THREE.PointCloudMaterial({
-        size: 5,
-        color: 0x003399
+        size: 4,
+        color: 0x339900
     });
     var system = new THREE.PointCloud(geometry, material);
 
@@ -64,6 +50,9 @@ require([
         requestAnimationFrame(tick);
         sandbox.render();
     }
+
+    system.position.x = -250;
+    system.position.z = 100;
 
     sandbox.add(system);
 
