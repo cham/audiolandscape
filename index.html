@@ -10,6 +10,36 @@
         background: #fff;
         background-size: 100%;
         overflow: hidden;
+        font-family: sans-serif;
+        letter-spacing: -1px;
+    }
+    .LandscapeUI {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100%;
+    }
+    .LandscapeUI div {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        padding: 10px 80px;
+        color: #333;
+        border: 2px dashed #333;
+        border-radius: 20px;
+        opacity: 0.7;
+        width: 100px;
+        margin: 0 auto;
+        cursor: pointer;
+    }
+    .twitter-share-button {
+        z-index: 2;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
     }
     </style>
   </head>
@@ -18,5 +48,7 @@
     <script src="bower_components/threejs/build/three.min.js"></script>
     <script src="js/stats.min.js"></script>
     <script data-main="main" src="bower_components/requirejs/require.js"></script>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-text="Check out this terrain mp3 visualiser, built with #threejs and #javascript" data-via="cham">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 </html>

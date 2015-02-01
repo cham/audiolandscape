@@ -1,11 +1,15 @@
 require([
     'js/controls',
     'js/Sandbox',
-    'js/AudioData'
+    'js/AudioData',
+    'js/DragDropArrayBuffer',
+    'js/LandscapeUI'
 ],function(
     datControls,
     Sandbox,
-    AudioData
+    AudioData,
+    DragDropArrayBuffer,
+    LandscapeUI
 ){
     'use strict';
 
@@ -14,7 +18,6 @@ require([
     var horizontalUnitsPerVertex = 6;
     var controls = datControls();
 
-    var stats = makeStats();
     var sandbox = new Sandbox();
     var geometry = new THREE.Geometry();
     var material = new THREE.MeshLambertMaterial({
@@ -36,9 +39,11 @@ require([
         return stats;
     }
 
+    var stats = makeStats();
+
     function moveCamera(){
         var delta = cameraTargetY - sandbox.camera.position.y;
-        var accelChange = delta / 200;
+        var accelChange = delta / 100;
 
         cameraAccel += accelChange;
         cameraAccel *= 0.9;
@@ -107,14 +112,14 @@ require([
         var texture = THREE.ImageUtils.loadTexture('img/sky.jpg');
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(4, 4);
-        var geometry = new THREE.SphereGeometry(400, 32, 32);
+        var geometry = new THREE.SphereGeometry(300, 32, 32);
         var material = new THREE.MeshBasicMaterial({
             map: texture,
             side: THREE.BackSide
         });
         var mesh = new THREE.Mesh(geometry, material);
 
-        mesh.position.set(0, 0, -200);
+        mesh.position.set(0, 0, -150);
 
         return mesh;
     }
@@ -201,13 +206,6 @@ require([
 
     var audio = new AudioData({
         bufferWidth: resolution,
-        // src: 'mp3/canon.mp3',
-        src: 'mp3/morning-mood-grieg.mp3',
-        // src: 'mp3/lighting-of-the-beacons.mp3',
-        // src: 'mp3/lighting-of-the-beacons-faded.mp3',
-        // src: 'mp3/macintosh-plus.mp3',
-        // src: 'mp3/minuit-jacuzzi.mp3',
-        // src: 'mp3/inthenews.mp3',
         onTick: function(freqArray){
             var freqY;
             var sumY = 0;
@@ -228,10 +226,13 @@ require([
 
             colourVertices();
             geometry.verticesNeedUpdate = true;
-            var maxCameraDistance = 150;
+            var maxCameraDistance = 150 / 2;
             var camPosToResolutionRatio = resolution / maxCameraDistance;
-            var cameraVertexOffset = Math.floor(sandbox.camera.position.x * camPosToResolutionRatio / horizontalUnitsPerVertex);
-            cameraTargetY = geometry.vertices[resolution + (resolution * 2 * (totalRows-5)) + cameraVertexOffset].y + 20;
+            var cameraVertexOffset = Math.floor((sandbox.camera.position.x * camPosToResolutionRatio) / horizontalUnitsPerVertex);
+            var cameraTargetFarY = geometry.vertices[resolution + (resolution * 2 * (totalRows-30)) + cameraVertexOffset].y;
+            var cameraTargetMidY = geometry.vertices[resolution + (resolution * 2 * (totalRows-20)) + cameraVertexOffset].y;
+            var cameraTargetNearY = geometry.vertices[resolution + (resolution * 2 * (totalRows-10)) + cameraVertexOffset].y;
+            cameraTargetY = Math.max(cameraTargetFarY, cameraTargetMidY, cameraTargetNearY) + 20;
             lightTargetY = (sumY / 3) - 200;
         }
     });
@@ -258,31 +259,37 @@ require([
         stats.begin();
         sandbox.render();
 
-        spotLight.position.x = controls.spotlightX;
-        spotLight.position.z = controls.spotlightZ;
-        spotLight.color = new THREE.Color(controls.spotlight);
-
-        system.position.x = controls.systemX;
-        system.position.z = controls.systemZ;
-
         moveCamera();
         moveLight();
-
-        sandbox.scene.fog.color = new THREE.Color(controls.fogColour);
 
         stats.end();
     }
 
-    sandbox.scene.fog = new THREE.Fog(0xEBE3D9, 0, 800); //0xE3C598
+    spotLight.position.x = controls.spotlightX;
+    spotLight.position.z = controls.spotlightZ;
+    spotLight.color = new THREE.Color(controls.spotlight);
+
+    system.position.x = controls.systemX;
+    system.position.z = controls.systemZ;
+    sandbox.scene.fog = new THREE.Fog(controls.fogColour, 0, 800);
 
     sandbox.add(waterPlane());
     sandbox.add(skySphere());
     sandbox.add(system);
     sandbox.add(spotLight);
     sandbox.add(hemi);
-    // sandbox.add(fillLighting());
+    sandbox.add(fillLighting());
+
+    var ui = new LandscapeUI();
+    ui.onDragAudio(function(arrayBuffer){
+        audio.onLoadAudio(arrayBuffer);
+    });
+    ui.onPlayDefault(function(){
+        audio.loadUrl('mp3/morning-mood-grieg.mp3');
+    });
 
     sandbox.appendTo(document.body);
-    requestAnimationFrame(tick);
+    document.body.appendChild(ui.domNode);
 
+    requestAnimationFrame(tick);
 });

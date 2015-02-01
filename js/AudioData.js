@@ -2,22 +2,12 @@ define(function(){
     'use strict';
 
     function loadUrl(url, onloadfn, onerrorfn){
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'arraybuffer';
-
-        xhr.onload = function(){
-            onloadfn(xhr.response);
-        };
-        xhr.onerror = onerrorfn;
-
-        xhr.send();
     }
 
     function requiredOptions(opt){
-        if(!opt.src){
-            throw new Error('src is required');
-        }
+        // if(!opt.src){
+        //     throw new Error('src is required');
+        // }
         if(!opt.bufferWidth){
             throw new Error('bufferWidth is required');
         }
@@ -32,8 +22,23 @@ define(function(){
         this.bufferWidth = options.bufferWidth;
         this.onTick = options.onTick;
 
-        loadUrl(options.src, this.onLoadAudio.bind(this));
+        if(options.src){
+            this.loadUrl(options.src);
+        }
     }
+
+    AudioData.prototype.loadUrl = function loadUrl(url){
+        var xhr = new XMLHttpRequest();
+        var onLoadAudio = this.onLoadAudio.bind(this);
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+
+        xhr.onload = function(){
+            onLoadAudio(xhr.response);
+        };
+
+        xhr.send();
+    };
 
     AudioData.prototype.onLoadAudio = function onLoadAudio(data){
         var context = new AudioContext();
