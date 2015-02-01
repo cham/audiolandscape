@@ -9,8 +9,9 @@ require([
 ){
     'use strict';
 
-    var totalRows = 100;
+    var totalRows = 105;
     var resolution = 64;
+    var horizontalUnitsPerVertex = 6;
     var controls = datControls();
 
     var stats = makeStats();
@@ -42,22 +43,9 @@ require([
         cameraAccel += accelChange;
         cameraAccel *= 0.9;
         sandbox.camera.position.y += cameraAccel;
-        if(sandbox.camera.position.y < 5){
-            sandbox.camera.position.y = 5;
+        if(sandbox.camera.position.y < 6){
+            sandbox.camera.position.y = 6;
         }
-    }
-
-    function moveLight(){
-        var delta = lightTargetY - spotLight.position.y;
-        var accelChange = delta / 100;
-
-        lightAccel += accelChange;
-        lightAccel *= 0.95;
-        spotLight.position.y += lightAccel;
-        if(spotLight.position.y < 1){
-            spotLight.position.y = 1;
-        }
-        sandbox.scene.fog.far = 500 + spotLight.position.y;
     }
 
     var heightColours = [0x339900, 0x72B84F, 0xCCE5BF, 0xE5F2DF, 0xF2F8EF, 0xFFFFFF];
@@ -119,13 +107,16 @@ require([
         var texture = THREE.ImageUtils.loadTexture('img/sky.jpg');
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(4, 4);
-        var geometry = new THREE.SphereGeometry(300, 32, 32);
+        var geometry = new THREE.SphereGeometry(400, 32, 32);
         var material = new THREE.MeshBasicMaterial({
             map: texture,
             side: THREE.BackSide
         });
+        var mesh = new THREE.Mesh(geometry, material);
 
-        return new THREE.Mesh(geometry, material);
+        mesh.position.set(0, 0, -200);
+
+        return mesh;
     }
 
     function waterPlane(){
@@ -161,12 +152,7 @@ require([
     }
 
     function fillLighting(){
-        var light = new THREE.DirectionalLight(0x111111);
-
-        light.castShadow = true;
-        light.shadowMapWidth = 2048;
-        light.shadowMapHeight = 2048;
-        light.shadowDarkness = 0.4;
+        var light = new THREE.DirectionalLight(0x112211);
 
         light.position.set(-522,400,81);
 
@@ -190,7 +176,7 @@ require([
 
     function addRow(rowNum){
         for(var i = 0; i < resolution * 2; i++){
-            geometry.vertices.push(new THREE.Vector3(i * 5, 0, -rowNum * 5));
+            geometry.vertices.push(new THREE.Vector3(i * horizontalUnitsPerVertex, 0, -rowNum * 5));
         }
     }
 
@@ -211,6 +197,7 @@ require([
     }
 
     var spotLight = lighting();
+    var hemi = hemilight();
 
     var audio = new AudioData({
         bufferWidth: resolution,
@@ -219,6 +206,8 @@ require([
         // src: 'mp3/lighting-of-the-beacons.mp3',
         // src: 'mp3/lighting-of-the-beacons-faded.mp3',
         // src: 'mp3/macintosh-plus.mp3',
+        // src: 'mp3/minuit-jacuzzi.mp3',
+        // src: 'mp3/inthenews.mp3',
         onTick: function(freqArray){
             var freqY;
             var sumY = 0;
@@ -239,10 +228,29 @@ require([
 
             colourVertices();
             geometry.verticesNeedUpdate = true;
-            cameraTargetY = geometry.vertices[resolution].y + 20;
+            var maxCameraDistance = 150;
+            var camPosToResolutionRatio = resolution / maxCameraDistance;
+            var cameraVertexOffset = Math.floor(sandbox.camera.position.x * camPosToResolutionRatio / horizontalUnitsPerVertex);
+            cameraTargetY = geometry.vertices[resolution + (resolution * 2 * (totalRows-5)) + cameraVertexOffset].y + 20;
             lightTargetY = (sumY / 3) - 200;
         }
     });
+
+    function moveLight(){
+        var delta = lightTargetY - spotLight.position.y;
+        var accelChange = delta / 100;
+
+        lightAccel += accelChange;
+        lightAccel *= 0.95;
+        spotLight.position.y += lightAccel;
+        if(spotLight.position.y < 1){
+            spotLight.position.y = 1;
+        }
+        sandbox.scene.fog.far = 600 + spotLight.position.y;
+        sandbox.scene.fog.near = spotLight.position.y / 2;
+
+        hemi.intensity = 0.4 + (spotLight.position.y / 1000);
+    }
 
     function tick(){
         requestAnimationFrame(tick);
@@ -271,7 +279,7 @@ require([
     sandbox.add(skySphere());
     sandbox.add(system);
     sandbox.add(spotLight);
-    sandbox.add(hemilight());
+    sandbox.add(hemi);
     // sandbox.add(fillLighting());
 
     sandbox.appendTo(document.body);

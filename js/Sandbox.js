@@ -1,7 +1,7 @@
 define(function(){
     'use strict';
 
-    var camTarget = new THREE.Vector3(0, 0, 0);
+    var camTarget = new THREE.Vector3(0, 25, -100);
 
     function windowSize(){
         return {
@@ -31,7 +31,7 @@ define(function(){
     }
 
     function rotateCamera(cam, ticks){
-        var cameraDistance = 70;
+        var cameraDistance = 150;
         cam.position.x = Math.PI - Math.sin(ticks * 0.01) * cameraDistance;
         // cam.position.y = (Math.cos(ticks * 0.01) * cameraDistance) / 2;
         // cam.position.y += cameraDistance * 1.25;
