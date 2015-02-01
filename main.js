@@ -16,6 +16,7 @@ require([
     var totalRows = 105;
     var resolution = 64;
     var horizontalUnitsPerVertex = 6;
+    var waterLevel = 1;
     var controls = datControls();
 
     var sandbox = new Sandbox();
@@ -82,24 +83,24 @@ require([
                 geometry.faces[k].vertexColors[1] = new THREE.Color(heightColours[bIndex]);
                 geometry.faces[k].vertexColors[2] = new THREE.Color(heightColours[cIndex]);
             }else{
-                if(aVertexY > 5 && aVertexY < 6){
+                if(aVertexY > waterLevel && aVertexY < waterLevel+1){
                     geometry.faces[k].vertexColors[0] = new THREE.Color(0xEFDD6F);
                     geometry.faces[k].resetSandA = true;
-                }else if(aVertexY > 6 && geometry.faces[k].resetSandA){
+                }else if(aVertexY > waterLevel+1 && geometry.faces[k].resetSandA){
                     geometry.faces[k].vertexColors[0] = new THREE.Color(0x339900);
                     geometry.faces[k].resetSandA = false;
                 }
-                if(bVertexY > 5 && bVertexY < 6){
+                if(bVertexY > waterLevel && bVertexY < waterLevel+1){
                     geometry.faces[k].vertexColors[1] = new THREE.Color(0xEFDD6F);
                     geometry.faces[k].resetSandB = true;
-                }else if(bVertexY > 6 && geometry.faces[k].resetSandB){
+                }else if(bVertexY > waterLevel+1 && geometry.faces[k].resetSandB){
                     geometry.faces[k].vertexColors[1] = new THREE.Color(0x339900);
                     geometry.faces[k].resetSandB = false;
                 }
-                if(cVertexY > 5 && cVertexY < 6){
+                if(cVertexY > waterLevel && cVertexY < waterLevel+1){
                     geometry.faces[k].vertexColors[2] = new THREE.Color(0xEFDD6F);
                     geometry.faces[k].resetSandC = true;
-                }else if(cVertexY > 6 && geometry.faces[k].resetSandC){
+                }else if(cVertexY > waterLevel+1 && geometry.faces[k].resetSandC){
                     geometry.faces[k].vertexColors[2] = new THREE.Color(0x339900);
                     geometry.faces[k].resetSandC = false;
                 }
@@ -127,12 +128,13 @@ require([
     function waterPlane(){
         var geometry = new THREE.PlaneGeometry(2000, 2000);
         var material = new THREE.MeshPhongMaterial({
-            color: 0x40a4df
+            color: 0x40a4df,
+            shininess: 90
         });
         var mesh = new THREE.Mesh(geometry, material);
 
         mesh.rotation.x = -Math.PI / 2;
-        mesh.position.y = 5;
+        mesh.position.y = waterLevel;
 
         return mesh;
     }
