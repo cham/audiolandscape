@@ -214,8 +214,8 @@ require([
 
     var audio = new AudioData({
         bufferWidth: resolution,
-        src: 'mp3/canon.mp3',
-        // src: 'mp3/morning-mood-grieg.mp3',
+        // src: 'mp3/canon.mp3',
+        src: 'mp3/morning-mood-grieg.mp3',
         // src: 'mp3/lighting-of-the-beacons.mp3',
         // src: 'mp3/lighting-of-the-beacons-faded.mp3',
         // src: 'mp3/macintosh-plus.mp3',
