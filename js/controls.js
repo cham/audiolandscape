@@ -5,7 +5,7 @@ define(function(){
         var gui = new dat.GUI();
         var config = {
             'spotlight': 0xa08f65,//a47400,//xE9C2A6,
-            'spotlightX': -200,
+            'spotlightX': -52,
             'spotlightY': 257,
             'spotlightZ': 900,
             'systemX': -316,
