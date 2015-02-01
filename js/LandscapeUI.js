@@ -14,8 +14,6 @@ function(
         return div;
     }
 
-    function playDefault(){}
-
     function LandscapeUI(){
         this.domNode = createDomNode();
     }
