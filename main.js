@@ -42,8 +42,8 @@ require([
         cameraAccel += accelChange;
         cameraAccel *= 0.9;
         sandbox.camera.position.y += cameraAccel;
-        if(sandbox.camera.position.y < 1){
-            sandbox.camera.position.y = 1;
+        if(sandbox.camera.position.y < 5){
+            sandbox.camera.position.y = 5;
         }
     }
 
