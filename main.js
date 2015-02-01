@@ -42,6 +42,9 @@ require([
         cameraAccel += accelChange;
         cameraAccel *= 0.9;
         sandbox.camera.position.y += cameraAccel;
+        if(sandbox.camera.position.y < 1){
+            sandbox.camera.position.y = 1;
+        }
     }
 
     function moveLight(){
@@ -234,9 +237,7 @@ require([
                 }
             }
 
-            if(stats.getFPS() > 30){
-                colourVertices();
-            }
+            colourVertices();
             geometry.verticesNeedUpdate = true;
             cameraTargetY = geometry.vertices[resolution].y + 20;
             lightTargetY = (sumY / 3) - 200;
