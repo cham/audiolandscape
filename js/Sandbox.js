@@ -14,6 +14,8 @@ define(function(){
         var glRenderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
         
         glRenderer.setClearColor(0xeeeeee, 1);
+        glRenderer.shadowMapEnabled = true;
+        // glRenderer.shadowMapType = THREE.PCFSoftShadowMap;
 
         return glRenderer;
     }
@@ -22,18 +24,18 @@ define(function(){
         var wSize = windowSize();
         var cam = new THREE.PerspectiveCamera(40, wSize.width / wSize.height, 1, 20000);
         
-        cam.position.set(0, 100, 300);
+        cam.position.set(0, 100, -400);
         cam.lookAt(camTarget);
 
         return cam;
     }
 
     function rotateCamera(cam, ticks){
-        var cameraDistance = 400;
+        var cameraDistance = 70;
         cam.position.x = Math.PI - Math.sin(ticks * 0.01) * cameraDistance;
-        cam.position.y = (Math.cos(ticks * 0.01) * cameraDistance) / 2;
-        cam.position.y += cameraDistance * 1.25;
-        cam.position.z = Math.PI - Math.cos(ticks * 0.01) * cameraDistance;
+        // cam.position.y = (Math.cos(ticks * 0.01) * cameraDistance) / 2;
+        // cam.position.y += cameraDistance * 1.25;
+        // cam.position.z = Math.PI - Math.cos(ticks * 0.01) * cameraDistance;
 
         cam.lookAt(camTarget);
     }
