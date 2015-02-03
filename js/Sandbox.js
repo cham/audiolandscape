@@ -15,7 +15,6 @@ define(function(){
         
         glRenderer.setClearColor(0xeeeeee, 1);
         glRenderer.shadowMapEnabled = true;
-        // glRenderer.shadowMapType = THREE.PCFSoftShadowMap;
 
         return glRenderer;
     }
@@ -34,9 +33,6 @@ define(function(){
         var cameraDistance = 150;
         var targetY = 25 + (Math.sin(ticks * 0.02) * camTarget.y);
         cam.position.x = Math.PI - Math.cos(ticks * 0.01) * cameraDistance;
-        // cam.position.y = (Math.cos(ticks * 0.01) * cameraDistance) / 2;
-        // cam.position.y += cameraDistance * 1.25;
-        // cam.position.z = Math.PI - Math.cos(ticks * 0.01) * cameraDistance;
 
         cam.lookAt(new THREE.Vector3(cam.position.x * 0.66, targetY, -100));
     }
