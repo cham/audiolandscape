@@ -1,20 +1,28 @@
 define([
-    'js/Tree'
+    'js/tree',
+    'js/pointLight'
 ],
 function(
-    Tree
+    treeBuilder,
+    pointLight
 ){
     'use strict';
 
-    function buildDetailItem(position){
-        var tree = Tree();
+    function buildDetailItem(position, type){
+        var detailItem;
 
-        tree.position.add(position);
+        if(type === 'tree'){
+            detailItem = treeBuilder();
+        }else if(type === 'light'){
+            detailItem = pointLight();
+        }
 
-        return tree;
+        detailItem.position.add(position);
+
+        return detailItem;
     }
 
-    function addRandomDetail(geometry, resolution, waterLevel, mountainLevel, offset){
+    function addRandomDetail(geometry, resolution, waterLevel, mountainLevel, offset, type){
         var candidateVertices = [];
         var y;
         for(var i = 0; i < resolution * 2; i++){
@@ -28,7 +36,7 @@ function(
         }
 
         var chosenVertex = candidateVertices[Math.floor(Math.random() * candidateVertices.length)];
-        var mesh = buildDetailItem(geometry.vertices[chosenVertex]);
+        var mesh = buildDetailItem(geometry.vertices[chosenVertex], type);
         mesh.position.add(offset);
         return mesh;
     }
@@ -45,7 +53,7 @@ function(
     }
 
     function requiredOptions(options){
-        var required = ['resolution', 'numRows', 'waterLevel', 'offsetX', 'offsetZ'];
+        var required = ['resolution', 'numRows', 'waterLevel', 'offsetX', 'offsetZ', 'type'];
         required.forEach(function(key){
             if(!options[key]){
                 throw new Error(key + ' is required');
@@ -61,12 +69,13 @@ function(
         this.waterLevel = options.waterLevel;
         this.offset = new THREE.Vector3(options.offsetX, 0, options.offsetZ);
         this.zUnitsPerVertex = 5;
+        this.type = options.type;
 
         this.items = [];
     }
 
     LandscapeDetails.prototype.addDetail = function addDetail(geometry){
-        var newMesh = addRandomDetail(geometry, this.resolution, this.waterLevel, 50, this.offset);
+        var newMesh = addRandomDetail(geometry, this.resolution, this.waterLevel, 50, this.offset, this.type);
         if(newMesh){
             this.items.push(newMesh);
             return newMesh;

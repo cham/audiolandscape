@@ -42,9 +42,59 @@
         bottom: 5px;
         left: 5px;
     }
+    .intro {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100%;
+    }
+    .launch {
+        padding: 80px 160px;
+        color: #333;
+        border: 1px solid #333;
+        border-radius: 20px;
+        opacity: 0.7;
+        width: 100px;
+        margin: 10px auto;
+        cursor: pointer;
+        background: rgba(255,255,255,0.3);
+        list-style-type: none;
+        text-align: center;
+    }
+    .support {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+    .viz-menu {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .green-hills {
+        background: url(img/green-hills.png) center center;
+    }
+    .volcano {
+        background: url(img/volcano.png) center center;
+        color: #fff;
+    }
     </style>
   </head>
   <body>
+    <section class="intro">
+        <ul class="viz-menu">
+            <li class="launch green-hills">Green hills</li>
+            <li class="launch volcano">Volcano</li>
+        </ul>
+        <p class="support">
+            This vis requires native browser support for HTML5 Audio and WebGL<br>
+            Recent Chrome and Firefox will be fine
+        </p>
+    </section>
     <script src="bower_components/datgui/build/dat.gui.min.js"></script>
     <script src="bower_components/threejs/build/three.min.js"></script>
     <script src="js/stats.min.js"></script>

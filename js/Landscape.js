@@ -21,21 +21,21 @@ define(function(){
                 geometry.faces[k].vertexColors[2] = new THREE.Color(colours[cIndex]);
             }else{
                 if(aVertexY > waterLevel && aVertexY < waterLevel+1){
-                    geometry.faces[k].vertexColors[0] = new THREE.Color(colours[5]);
+                    geometry.faces[k].vertexColors[0] = new THREE.Color(colours[6]);
                     geometry.faces[k].resetSandA = true;
                 }else if(aVertexY > waterLevel+1 && geometry.faces[k].resetSandA){
                     geometry.faces[k].vertexColors[0] = new THREE.Color(colours[0]);
                     geometry.faces[k].resetSandA = false;
                 }
                 if(bVertexY > waterLevel && bVertexY < waterLevel+1){
-                    geometry.faces[k].vertexColors[1] = new THREE.Color(colours[5]);
+                    geometry.faces[k].vertexColors[1] = new THREE.Color(colours[6]);
                     geometry.faces[k].resetSandB = true;
                 }else if(bVertexY > waterLevel+1 && geometry.faces[k].resetSandB){
                     geometry.faces[k].vertexColors[1] = new THREE.Color(colours[0]);
                     geometry.faces[k].resetSandB = false;
                 }
                 if(cVertexY > waterLevel && cVertexY < waterLevel+1){
-                    geometry.faces[k].vertexColors[2] = new THREE.Color(colours[5]);
+                    geometry.faces[k].vertexColors[2] = new THREE.Color(colours[6]);
                     geometry.faces[k].resetSandC = true;
                 }else if(cVertexY > waterLevel+1 && geometry.faces[k].resetSandC){
                     geometry.faces[k].vertexColors[2] = new THREE.Color(colours[0]);
@@ -148,7 +148,7 @@ define(function(){
         var nearRightY = vertices[nearVertex + 2].y;
         var underneathY = vertices[undernearthVertex].y;
 
-        return Math.max(farY, nearY, nearLeftY, nearRightY, underneathY) + 5;
+        return Math.max(farY, nearY, nearLeftY, nearRightY, underneathY);
     };
 
     Landscape.prototype.onAudioTick = function onAudioTick(frequencyData){

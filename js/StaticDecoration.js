@@ -1,10 +1,10 @@
 define(function(){
     'use strict';
 
-    function buildSkySphere(){
-        var texture = THREE.ImageUtils.loadTexture('img/sky.jpg');
+    function buildSkySphere(mapPath){
+        var texture = THREE.ImageUtils.loadTexture(mapPath);
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(4, 4);
+        texture.repeat.set(6, 6);
         var geometry = new THREE.SphereGeometry(400, 32, 32);
         var material = new THREE.MeshBasicMaterial({
             map: texture,
@@ -17,10 +17,10 @@ define(function(){
         return mesh;
     }
 
-    function buildWaterPlane(waterLevel){
+    function buildWaterPlane(waterLevel, colour){
         var geometry = new THREE.PlaneGeometry(2000, 2000);
         var material = new THREE.MeshPhongMaterial({
-            color: 0x40a4df,
+            color: colour,
             shininess: 90
         });
         var mesh = new THREE.Mesh(geometry, material);
@@ -32,7 +32,7 @@ define(function(){
     }
 
     function requiredOptions(options){
-        ['waterLevel'].forEach(function(key){
+        ['waterLevel', 'waterColour'].forEach(function(key){
             if(!options[key]){
                 throw new Error(key + ' is required');
             }
@@ -42,8 +42,8 @@ define(function(){
     function StaticDecoration(options){
         requiredOptions(options || {});
 
-        this.skySphere = buildSkySphere();
-        this.waterPlane = buildWaterPlane(options.waterLevel);
+        this.skySphere = buildSkySphere(options.skyMap);
+        this.waterPlane = buildWaterPlane(options.waterLevel, options.waterColour);
     }
 
     StaticDecoration.prototype.getObjects = function(){
