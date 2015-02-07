@@ -76,6 +76,10 @@ define(function(){
         this.scene.add(threeObject);
     };
 
+    Sandbox.prototype.remove = function remove(threeObject){
+        this.scene.remove(threeObject);
+    };
+
     return Sandbox;
 
 });

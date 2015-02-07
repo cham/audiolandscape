@@ -5,14 +5,14 @@ define(function(){
         var texture = THREE.ImageUtils.loadTexture('img/sky.jpg');
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(4, 4);
-        var geometry = new THREE.SphereGeometry(300, 32, 32);
+        var geometry = new THREE.SphereGeometry(400, 32, 32);
         var material = new THREE.MeshBasicMaterial({
             map: texture,
             side: THREE.BackSide
         });
         var mesh = new THREE.Mesh(geometry, material);
 
-        mesh.position.set(0, 0, -150);
+        mesh.position.set(0, 0, -50);
 
         return mesh;
     }

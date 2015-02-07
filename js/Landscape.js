@@ -1,15 +1,15 @@
 define(function(){
 
-    function colourVertices(geometry, colours, waterLevel){
+    function colourVertices(geometry, colours, waterLevel, mountainLevel){
         for(var k = 0; k < geometry.faces.length; k++){
             var aVertexY = geometry.vertices[geometry.faces[k].a].y;
             var bVertexY = geometry.vertices[geometry.faces[k].b].y;
             var cVertexY = geometry.vertices[geometry.faces[k].c].y;
 
-            if(aVertexY > 50 || bVertexY > 50 || cVertexY > 50){
-                var aIndex = Math.floor((aVertexY - 50) / 2);
-                var bIndex = Math.floor((bVertexY - 50) / 2);
-                var cIndex = Math.floor((cVertexY - 50) / 2);
+            if(aVertexY > mountainLevel || bVertexY > mountainLevel || cVertexY > mountainLevel){
+                var aIndex = Math.floor((aVertexY - mountainLevel) / 2);
+                var bIndex = Math.floor((bVertexY - mountainLevel) / 2);
+                var cIndex = Math.floor((cVertexY - mountainLevel) / 2);
                 if(aIndex < 0){ aIndex = 0; }
                 if(bIndex < 0){ bIndex = 0; }
                 if(cIndex < 0){ cIndex = 0; }
@@ -75,6 +75,18 @@ define(function(){
         }
     }
 
+    function highestPointInLine(vertices, xOffset, zOffset, rowLength, lineLength){
+        var max = 0;
+        var y;
+        while(lineLength--){
+            y = vertices[xOffset + (rowLength * (zOffset - lineLength))].y;
+            if(y > max){
+                max = y
+            }
+        }
+        return y;
+    }
+
     function buildGeometry(geometry, resolution, totalRows, unitsPerVertex, colours){
         for(var i = 0; i < totalRows; i++){
             addRow(geometry, resolution, unitsPerVertex, i);
@@ -113,19 +125,30 @@ define(function(){
         this.mesh.position.z = options.meshZ;
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
+        this.mountainLevel = 50;
+        this.cameraDirection = 0;
+        this.lastCameraPosition = 0;
 
         buildGeometry(this.geometry, this.resolution, this.numRows, this.unitsPerVertex, this.colours);
     }
 
     Landscape.prototype.getCameraTargetY = function getCameraTargetY(cameraX){
+        var vertices = this.geometry.vertices;
         var doubleResolution = this.resolution * 2;
-        var camPosToResolutionRatio = this.resolution / this.cameraXRange;
-        var xVertexOffset = Math.floor((cameraX * camPosToResolutionRatio) / this.unitsPerVertex);
+        var camPosToResolutionRatio = (this.resolution / this.cameraXRange) * 1.2;
+        var xVertexOffset = Math.ceil((cameraX * camPosToResolutionRatio) / this.unitsPerVertex);
         var offset = this.resolution + xVertexOffset;
-        var cameraTargetFarY = this.geometry.vertices[offset + (doubleResolution * (this.numRows - 20))].y;
-        var cameraTargetNearY = this.geometry.vertices[offset + (doubleResolution * (this.numRows - 10))].y;
+        var farVertex = offset + (doubleResolution * (this.numRows - 20));
+        var nearVertex = offset + (doubleResolution * (this.numRows - 10));
+        var undernearthVertex = offset + (doubleResolution * (this.numRows - 5));
 
-        return Math.max(cameraTargetFarY, cameraTargetNearY) + 20;
+        var farY = vertices[farVertex].y;
+        var nearY = vertices[nearVertex].y;
+        var nearLeftY = vertices[nearVertex - 2].y;
+        var nearRightY = vertices[nearVertex + 2].y;
+        var underneathY = vertices[undernearthVertex].y;
+
+        return Math.max(farY, nearY, nearLeftY, nearRightY, underneathY) + 5;
     };
 
     Landscape.prototype.onAudioTick = function onAudioTick(frequencyData){
@@ -143,12 +166,8 @@ define(function(){
             }
         }
 
-        colourVertices(this.geometry, this.colours, this.waterLevel);
+        colourVertices(this.geometry, this.colours, this.waterLevel, this.mountainLevel);
         this.geometry.verticesNeedUpdate = true;
-    };
-
-    Landscape.prototype.getMesh = function(){
-        return this.mesh;
     };
 
     return Landscape;
