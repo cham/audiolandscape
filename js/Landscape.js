@@ -110,7 +110,7 @@ define(function(){
                 })
             ]);
         }
-        return new THREE.Mesh(this.geometry, material);
+        return new THREE.Mesh(geometry, material);
     }
 
     function requiredOptions(options){
