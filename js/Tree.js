@@ -38,31 +38,16 @@ define(function(){
         var group = new THREE.Group();
 
         group.add(trunk());
-        group.add(leaves(fuzzy(0, 0.5), 3 + fuzzy(0, 0.5), fuzzy(0, 0.5)));
-        group.add(leaves(fuzzy(0, 0.5), 3 + fuzzy(0, 0.5), fuzzy(0, 0.5)));
-        group.add(leaves(fuzzy(0, 0.5), 3 + fuzzy(0, 0.5), fuzzy(0, 0.5)));
+        group.add(leaves(fuzzy(0, 0.3), 3 + fuzzy(0, 0.3), fuzzy(0, 0.3)));
+        group.add(leaves(fuzzy(-0.3, 0.3), 2.5 + fuzzy(0, 0.3), fuzzy(-0.3, 0.3)));
+        group.add(leaves(fuzzy(-0.3, 0), 3 + fuzzy(0, 0.3), fuzzy(-0.3, 0)));
+
+        var scale = 0.5 + Math.random();
+        group.scale.set(scale, scale, scale);
 
         return group;
     }
 
-    function buildTreeGroup(){
-        var group = new THREE.Group();
-        var tree1 = buildTree();
-        var tree2 = buildTree();
-
-        group.add(tree1);
-        group.add(tree2);
-
-        tree1.position.x += fuzzy(-2, 2);
-        tree1.position.y -= fuzzy(1, 2);
-        tree1.position.z += fuzzy(-2, 2);
-        tree2.position.x += fuzzy(-2, 2);
-        tree2.position.y -= fuzzy(1, 2);
-        tree2.position.z += fuzzy(-2, 2);
-
-        return group;
-    }
-
-    return buildTreeGroup;
+    return buildTree;
 
 });
