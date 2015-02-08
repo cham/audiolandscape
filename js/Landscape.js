@@ -99,8 +99,22 @@ define(function(){
         geometry.computeVertexNormals();
     }
 
+    function buildMesh(geometry, includeWireframe){
+        var material = new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors});
+        if(includeWireframe){
+            return THREE.SceneUtils.createMultiMaterialObject(geometry, [
+                material,
+                new THREE.MeshBasicMaterial({
+                    color: 0x333333,
+                    wireframe: true
+                })
+            ]);
+        }
+        return new THREE.Mesh(this.geometry, material);
+    }
+
     function requiredOptions(options){
-        var required = ['resolution', 'numRows', 'waterLevel', 'unitsPerVertex', 'colours', 'cameraXRange', 'meshX', 'meshZ'];
+        var required = ['resolution', 'numRows', 'waterLevel', 'mountainLevel', 'unitsPerVertex', 'colours', 'cameraXRange', 'meshX', 'meshZ'];
         required.forEach(function(key){
             if(!options[key]){
                 throw new Error(key + ' is required');
@@ -119,13 +133,12 @@ define(function(){
         this.cameraXRange = options.cameraXRange;
 
         this.geometry = new THREE.Geometry();
-        this.material = new THREE.MeshLambertMaterial({vertexColors: THREE.VertexColors});
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.mesh = buildMesh(this.geometry, options.wireframeOverlay);
         this.mesh.position.x = options.meshX;
         this.mesh.position.z = options.meshZ;
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
-        this.mountainLevel = 50;
+        this.mountainLevel = options.mountainLevel;
         this.cameraDirection = 0;
         this.lastCameraPosition = 0;
 

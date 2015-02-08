@@ -1,5 +1,6 @@
 define([
     'js/Landscape',
+    'js/LandscapeInverted',
     'js/LandscapeDetails',
     'js/Lighting',
     'js/StaticDecoration',
@@ -9,6 +10,7 @@ define([
     'js/LandscapeUI'
 ],function(
     Landscape,
+    LandscapeInverted,
     LandscapeDetails,
     Lighting,
     StaticDecoration,
@@ -35,7 +37,7 @@ define([
         var resolution = 64;
         var numRows = 105;
         var waterLevel = 1;
-        var useFog = true;
+        var useFog = config.useFog === false ? false : true;
         var systemX = -390;
         var systemZ = 115;
 
@@ -46,17 +48,25 @@ define([
 
         var cameraTargetY = 0;
         var cameraAccel = 0;
-
-        var landscape = new Landscape({
+        var landscape;
+        var landscapeOptions = {
             resolution: resolution,
             numRows: numRows,
             waterLevel: waterLevel,
+            mountainLevel: config.mountainLevel || 50,
             unitsPerVertex: 6,
             colours: config.landColours,
             cameraXRange: 150 / 2,
             meshX: systemX,
-            meshZ: systemZ
-        });
+            meshZ: systemZ,
+            wireframeOverlay: config.wireframeOverlay
+        };
+
+        if(config.landscapeType === 'inverted'){
+            landscape = new LandscapeInverted(landscapeOptions);
+        }else{
+            landscape = new Landscape(landscapeOptions);
+        }
 
         var landscapeDetails = new LandscapeDetails({
             resolution: resolution,

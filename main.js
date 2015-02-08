@@ -5,6 +5,21 @@ require([
 ){
     'use strict';
 
+    function launchVapor(){
+        viz({
+            useFog: false,
+            landColours: [0x00ffff, 0xffffff, 0xffaadd, 0xff99cc, 0x00ffff, 0xff69b4, 0xff69b4],
+            wireframeOverlay: true,
+            spotlightColour: 0xff69b4,
+            includeDetail: false,
+            waterColour: 0x00ffff,
+            skyMap: 'img/vapor.png',
+            cameraHeight: 10,
+            mp3Url: 'mp3/starworshipper.mp3',
+            landscapeType: 'inverted'
+        });
+    }
+
     function launchVolcano(){
         viz({
             fogColour: 0x000000,
@@ -41,6 +56,9 @@ require([
 
         if(this.className.indexOf('volcano') > -1){
             return launchVolcano();
+        }
+        if(this.className.indexOf('vapor') > -1){
+            return launchVapor();
         }
         launchHills();
     }

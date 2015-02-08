@@ -53,7 +53,7 @@ function(
     }
 
     function requiredOptions(options){
-        var required = ['resolution', 'numRows', 'waterLevel', 'offsetX', 'offsetZ', 'type'];
+        var required = ['resolution', 'numRows', 'waterLevel', 'offsetX', 'offsetZ'];
         required.forEach(function(key){
             if(!options[key]){
                 throw new Error(key + ' is required');
